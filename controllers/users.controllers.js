@@ -1,5 +1,4 @@
 const { request, response } = require("express");
-const { validationResult } = require("express-validator");
 const bcryptjs = require("bcryptjs");
 
 const User = require("../models/user");
@@ -80,8 +79,9 @@ const deleteUsers = async (req = request, res = response) => {
 
   // ? Delete user state
   const user = await User.findByIdAndUpdate(id, { state: false });
+  const authUser = req.user;
 
-  res.json(user);
+  res.json({ user, authUser });
 };
 
 module.exports = {
