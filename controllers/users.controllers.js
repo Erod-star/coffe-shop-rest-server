@@ -39,8 +39,8 @@ const postUsers = async (req, res = response) => {
     // ? Store in database
     await user.save();
 
-    res.json({
-      msg: "post API - Controller",
+    res.status(201).json({
+      msg: "User created!",
       user,
     });
   } catch (error) {

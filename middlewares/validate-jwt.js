@@ -8,7 +8,7 @@ const validateJWT = async (req = request, res = response, next) => {
 
   if (!token) {
     return res.status(401).json({
-      msg: "No Authorization header",
+      msg: "No token provided",
     });
   }
 
