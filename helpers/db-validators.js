@@ -22,8 +22,17 @@ const userIdExist = async (id = "") => {
   }
 };
 
+const validateAllowedCollections = (collection = "", collections = []) => {
+  const isIncluded = collections.includes(collection);
+  if (!isIncluded) {
+    throw new Error(`The collection ${collection} is not allowed`);
+  }
+  return true;
+};
+
 module.exports = {
   isValidRole,
   emailExist,
   userIdExist,
+  validateAllowedCollections,
 };
