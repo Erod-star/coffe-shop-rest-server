@@ -72,7 +72,6 @@ const googleLogin = async (req = request, res = response) => {
       await user.save();
     }
 
-    console.log(user);
     // ? If the user does not exist on my db
     if (!user.state) {
       return res.status(401).json({
@@ -81,7 +80,7 @@ const googleLogin = async (req = request, res = response) => {
     }
 
     // ? Generate JWT
-    const token = await generateJWT(id_token);
+    const token = await generateJWT(user.id);
 
     res.json({
       user,
@@ -95,7 +94,17 @@ const googleLogin = async (req = request, res = response) => {
   }
 };
 
+const renewToken = async (req = request, res = response) => {
+  const { user } = req;
+
+  // ? Create JWT
+  const token = await generateJWT(user.id);
+
+  res.json({ user, token });
+};
+
 module.exports = {
   login,
   googleLogin,
+  renewToken,
 };

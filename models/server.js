@@ -2,13 +2,17 @@
 const express = require("express");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+const { createServer } = require("http");
 
 const { dbConnection } = require("../database/config");
+const { socketController } = require("../sockets/controllers");
 
 class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
+    this.server = createServer(this.app);
+    this.io = require("socket.io")(this.server);
 
     // ? Paths
     this.paths = {
@@ -28,6 +32,9 @@ class Server {
 
     // ? Routes
     this.routes();
+
+    // ? Sockets
+    this.socketEvents();
   }
 
   async connectDB() {
@@ -63,8 +70,12 @@ class Server {
     this.app.use(this.paths.uploads, require("../routes/uploads.routes"));
   }
 
+  socketEvents() {
+    this.io.on("connection", (socket) => socketController(socket, this.io));
+  }
+
   listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       console.log(`Listening app on port ${this.port}`);
     });
   }
